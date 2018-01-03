@@ -1,0 +1,2 @@
+#This is a modpack.
+#It contains the Guidebooks Core mod as well as a few implementation mods.
