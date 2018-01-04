@@ -20,12 +20,15 @@ guidebooks = {}
 
   definition:
     {
-
+      -- TODO
     }
 
-  returns the created guidebook.
+  returns the created guidebook which is a table with the following properties:
+    {
+      -- TODO
+    }
 ]]
-guidebooks.new = implementation.new
+guidebooks.new--[[(definition)]] = implementation.new
 
 --[[
   Registers a guidebook with the management api.  Registered books go through
@@ -37,12 +40,12 @@ guidebooks.new = implementation.new
   guidebook:  the guidebook created by a call to `guidebooks:new`
   options:
     {
-
+      -- TODO
     }
 
   returns true if the registration was successful, false otherwise.
 ]]
-guidebooks.register = implementation.register
+guidebooks.register--[[(guidebook, options)]] = implementation.register
 
 --[[
   Unregisters a guidebook that was previously registered.
@@ -54,16 +57,16 @@ guidebooks.register = implementation.register
   returns true if the guidebook was previously registered and was successfully
     unregistered, false otherwise.
 ]]
-guidebooks.unregister = implementation.unregister
+guidebooks.unregister--[[(identifier)]] = implementation.unregister
 
 --[[
   Locates a registered guidebook via the name it was registered with.
 
-  name:  the string identifying the guidebooks
+  name:  the string identifying the guidebook
 
   returns the guidebook table, or nil if no guidebook was found.
 ]]
-guidebooks.locate = implementation.locate
+guidebooks.locate--[[(name)]] = implementation.locate
 
 -- Package Finalization
 -----------------------

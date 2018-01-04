@@ -5,7 +5,7 @@
   and understand file.
 ]]
 
--- Local Helpers Objects
+-- Local Helper Objects
 ------------------------
 
 local modpath = minetest.get_modpath('guidebooks')
