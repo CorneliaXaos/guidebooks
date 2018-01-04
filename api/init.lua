@@ -25,7 +25,7 @@ guidebooks = {}
 
   returns the created guidebook.
 ]]
-guidebooks.new(definition) = implementation.new
+guidebooks.new = implementation.new
 
 --[[
   Registers a guidebook with the management api.  Registered books go through
@@ -42,7 +42,7 @@ guidebooks.new(definition) = implementation.new
 
   returns true if the registration was successful, false otherwise.
 ]]
-guidebooks.register(guidebook, options) = implementation.register
+guidebooks.register = implementation.register
 
 --[[
   Unregisters a guidebook that was previously registered.
@@ -54,7 +54,7 @@ guidebooks.register(guidebook, options) = implementation.register
   returns true if the guidebook was previously registered and was successfully
     unregistered, false otherwise.
 ]]
-guidebooks.unregister(identifier) = implementation.unregister
+guidebooks.unregister = implementation.unregister
 
 --[[
   Locates a registered guidebook via the name it was registered with.
@@ -63,7 +63,7 @@ guidebooks.unregister(identifier) = implementation.unregister
 
   returns the guidebook table, or nil if no guidebook was found.
 ]]
-guidebooks.locate(name) = implementation.locate
+guidebooks.locate = implementation.locate
 
 -- Package Finalization
 -----------------------
