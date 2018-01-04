@@ -12,7 +12,6 @@ local implementation = dofile(modpath .. '/api/implementation.lua')
 -- Initialize the public facing guidebooks api objects
 -------------------------------
 guidebooks = {}
-local guides = {} -- key-value table of registered guides
 
 --[[
   Creates a new guidebook.  The guidebook is not registered into the system
