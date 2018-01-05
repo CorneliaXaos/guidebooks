@@ -35,9 +35,10 @@ end
 
 -- Backing for guidebooks:register(guidebook, options)
 local function register(guidebook, options)
+  options.formname = options.formname or guidebook.name
+  options.craftitem = options.craftitem or guidebook.name
+
   -- Define locals
-  local formname = options.formname or guidebook.name
-  local craftitem = options.craftitem or guidebook.name
   local definition = {
     description = options.description,
     inventory_image = options.inventory_image,
@@ -84,7 +85,7 @@ local function register(guidebook, options)
   }
 
   -- Register CraftItem and Craft
-  minetest.register_craftitem(craftitem, definition)
+  minetest.register_craftitem(options.craftitem, definition)
   if compatibility.should_register_craft() then
     minetest.register_craft(
       {
@@ -95,14 +96,14 @@ local function register(guidebook, options)
     )
   end
 
-  -- Register Receive Fields
+  -- Register Receive Fields -- BUG this must be moved to a global section..
   minetest.register_on_player_recieve_fields(
     function(player, in_formname, fields)
       if in_formname ~= formname then
         return false
       end
 
-      return guidebooks.receive(player, fields)
+      return guidebook.receive(player, fields)
     end
   )
 
@@ -112,7 +113,46 @@ end
 
 -- Backing for guidebooks:unregister(identifier)
 local function unregister(identifier)
-  -- TODO define backing for guidebooks:unregister
+  -- First, find our guidebook
+  local guidebook, options
+  do -- initialize guidebook
+    local type = type(identifier)
+    if type == "string" then
+      if guides[identifier] ~= nil then
+        guidebook = guides[identifier].guide
+        options = guides[identifier].options
+      else
+        return false
+      end
+    elseif type == "table" then
+      if identifier.name ~= nil then
+        if identifier == guides[identifer.name].guide then
+          guidebook = identifier
+          options = guides[guidebook.name].options
+        else
+          return false
+        end
+      else
+        return false
+      end
+    else
+      return false
+    end
+  end
+
+  -- attempt to unregister craft
+  if compatibility.should_register_craft() then
+    minetest.clear_craft(options.craftitem)
+  end
+
+  -- clear craftitem
+  minetest.unregister_item(options.craftitem)
+
+  -- clear cache
+  guides[guidebook.name] = nil
+
+  -- success
+  return true
 end
 
 -- Backing for guidebooks:locate(name)

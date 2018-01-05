@@ -1,0 +1,2 @@
+-- TODO define get_book()
+-- TODO define should_register_craft()
