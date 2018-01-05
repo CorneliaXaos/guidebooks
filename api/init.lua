@@ -176,7 +176,23 @@ guidebooks.new--[[(definition)]] = implementation.new
   guidebook:  the guidebook created by a call to `guidebooks:new`
   options:
     {
-      -- TODO
+      craftitem: an OPTIONAL string indicating the name of the craftitem
+        produced when a player crafts this guidebook (i.e. 'mymod:guide');
+        if one is not provided the API attempts to use the name of the
+        guidebook itself (i.e. `guidebook.name`); THE DEVELOPER SHOULD NOT
+        REGISTER THIS CRAFTITEM WITH MINETEST, the API will handle that.
+      recipeitem: a string identifying a single item to combine with the
+        (compatibility determined) book item in a shapeless recipe; for
+        example, if creating a guidebook about wood, the item might be
+        'default:wood', in which case the API would likely generate a recipe
+        involving 'default:book' and 'default:wood' (since your mod would
+        rely on the default mod; this mod can function WITHOUT default and
+        may use a different 'book' item as the crafting base)
+      formname: an OPTIONAL string overriding the Formspec formname for this
+        guidebook; the API uses the guidebook's name by default.
+      use_callback: an OPTIONAL function callback to call before the guidebook
+        is displayed to the user; this function MUST return a boolean indicating
+        if guidebooks should show the guidebook or not.
     }
 
   returns true if the registration was successful, false otherwise.
