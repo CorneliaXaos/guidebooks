@@ -80,7 +80,7 @@ guidebooks = {}
             textures: table containing texture overrides to customize the
               visual appearance of the formspec
               {
-                TODO
+                TODO document texture overrides
               }
             max: table containing limits on certain functions, actual values
               may be less than requested
@@ -157,7 +157,7 @@ guidebooks = {}
         }
 
         -- functions
-        show(player): shows this guidebook to the specified player
+        show(player, formname): shows this guidebook to the specified player
         receive(player, fields): should be called when receiving fields in
           order to handle guidebook specific functions, returns true if it
           handled something (and there's probably nothing left to do), false
@@ -176,11 +176,6 @@ guidebooks.new--[[(definition)]] = implementation.new
   guidebook:  the guidebook created by a call to `guidebooks:new`
   options:
     {
-      craftitem: an OPTIONAL string indicating the name of the craftitem
-        produced when a player crafts this guidebook (i.e. 'mymod:guide');
-        if one is not provided the API attempts to use the name of the
-        guidebook itself (i.e. `guidebook.name`); THE DEVELOPER SHOULD NOT
-        REGISTER THIS CRAFTITEM WITH MINETEST, the API will handle that.
       recipeitem: a string identifying a single item to combine with the
         (compatibility determined) book item in a shapeless recipe; for
         example, if creating a guidebook about wood, the item might be
@@ -188,6 +183,22 @@ guidebooks.new--[[(definition)]] = implementation.new
         involving 'default:book' and 'default:wood' (since your mod would
         rely on the default mod; this mod can function WITHOUT default and
         may use a different 'book' item as the crafting base)
+      craftitem: an OPTIONAL string indicating the name of the craftitem
+        produced when a player crafts this guidebook (i.e. 'mymod:guide');
+        if one is not provided the API attempts to use the name of the
+        guidebook itself (i.e. `guidebook.name`); THE DEVELOPER SHOULD NOT
+        REGISTER THIS CRAFTITEM WITH MINETEST, the API will handle that.
+      description: an OPTIONAL string to use as the description for this guide;
+        if not provided, than the following is used:
+        `guidebook.name .. ': A Guide'`
+      inventory_image: an OPTIONAL image string for identifying the texture to
+        use as this item's inventory_image.  If one is not provided, a default
+        one from within guidebooks is used.
+      definition: an OPTIONAL table used for registering the entire craftitem;
+        allows developers to set complex craftitem options; the entries within
+        this table can be overwritten by the ones above.  Note that the "on_use"
+        parameter is IGNORED.  Use the below `use_callback` option for
+        specifying custom logic.
       formname: an OPTIONAL string overriding the Formspec formname for this
         guidebook; the API uses the guidebook's name by default.
       use_callback: an OPTIONAL function callback to call before the guidebook
