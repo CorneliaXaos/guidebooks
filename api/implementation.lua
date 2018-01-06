@@ -10,7 +10,9 @@
 
 local modpath = minetest.get_modpath('guidebooks')
 local compatibility = dofile(modpath .. '/api/compatibility.lua')
+local formspecs = dofile(modpath .. '/api/formspecs.lua')
 local settings = dofile(modpath .. '/common/settings.lua')
+local utility = dofile(modpath .. '/api/utility.lua')
 
 -- API Objects
 --------------
@@ -30,7 +32,46 @@ local guides = {}
 
 -- Backing for guidebooks:new(definition)
 local function new(definition)
-  -- TODO define backing for guidebooks:new
+  local guide = {}
+
+  -- Verify Incoming Definition
+  if not utility.verify_guide(definition) then
+    return nil
+  end
+
+  -- Rectify Options
+  -- TODO relocate option rectification to 'utility.lua'
+  definition.options = definition.options or {}
+  definition.options.dimensions = definition.options.dimensions or {}
+  definition.options.textures = definition.options.textures or {}
+  definition.options.max = definintion.options.max or {}
+
+  setmetatable(definition.options.dimensions, defaults.options.dimensions)
+  setmetatable(definition.options.textures, defaults.options.textures)
+  setmetatable(definition.options.max, defaults.options.max)
+  definition.options.max.bookmarks =
+    formspecs.calculate_bookmark_count(definition.options.dimensions)
+
+  -- Assign Defintion Data
+  guide.name = definition.name
+  guide.display = definition.display
+  guide.section_groups = definition.section_groups
+  guide.options = definition.options
+
+  -- Gen New Tables
+  guide.context = {}
+
+  -- Assign Operating Functions
+  function guide:show(player, formname)
+    -- TODO show code
+  end
+
+  function guide:receive(player, fields)
+    -- TODO receive code
+  end
+
+  -- Return Guidebook
+  return guide
 end
 
 -- Backing for guidebooks:register(guidebook, options)

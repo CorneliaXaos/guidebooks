@@ -1,2 +1,3 @@
 -- TODO define get_book()
 -- TODO define should_register_craft()
+-- TODO define detached_inventory()
