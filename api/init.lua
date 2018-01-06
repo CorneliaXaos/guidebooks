@@ -118,7 +118,11 @@ guidebooks = {}
                   section: index of active section within the group
                   page_group: index of active page_group within section
                   page: index of active page within page group
-                  scroll: the scroll value of the section_group scrollbar
+                  scroll: table containing scrolling information
+                    {
+                      section_group: index offset inside sections for scrolling
+                      index: scroll value for index scrollbar
+                    }
                 }
               persist: context table containing information that guidebooks
                 will preserve between user sessions and server sessions; since

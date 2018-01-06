@@ -9,6 +9,7 @@
 ------------------------
 
 local modpath = minetest.get_modpath('guidebooks')
+local modstorage = minetest.get_mod_storage()
 local compatibility = dofile(modpath .. '/api/compatibility.lua')
 local formspecs = dofile(modpath .. '/api/formspecs.lua')
 local settings = dofile(modpath .. '/common/settings.lua')
@@ -63,6 +64,7 @@ local function new(definition)
   guide.context = {}
 
   -- Assign Operating Functions
+  -- IDEA these functions could be moved out of here into their own file
   function guide:show(player_name, formname)
     local context = self.context[player_name]
     local formspec = formspecs.render_guide(
@@ -123,6 +125,8 @@ local function register(guidebook, options)
 
   -- Catch points of failure:
   if
+    guides[guidebook.name] ~= nil or
+    formnames[options.formname] ~= nil or
     options.recipeitem == nil or
     minetest.registered_craftitems[craftitem] ~= nil
   then
@@ -207,6 +211,45 @@ local function locate(name)
   end
 end
 
+-- Local Helper Functions
+-------------------------
+-- IDEA move this to a `persist.lua` ?
+
+local function persist_clean(player_name)
+  for _, entry in pairs(guides) do
+    entry.guide.context[player_name] = nil
+  end
+end
+
+local function persist_load(player_name)
+  local stored = modstorage.get_string(player_name)
+  local persist
+
+  -- It looks as if unset strings will return the empty string..
+  -- We'll check both to be safe.
+  if stored ~= nil and stored ~= '' then
+      persist = minetest.deserialize(stored)
+  end
+
+  return persist
+end
+
+local function persist_player(player_name)
+  local persist = {}
+  for name, entry in pairs(guides) do
+    persist[name] = entry.guide.context[player_name].persist
+  end
+  local to_store = minetest.serialize(persist)
+
+  modstorage.set_string(player_name, to_store)
+end
+
+local function persist_global()
+  for _, player in ipairs(minetest.get_connected_players()) do
+    persist_player(player.get_player_name())
+  end
+end
+
 -- Global Registration Functions
 --------------------------------
 
@@ -222,7 +265,60 @@ minetest.register_on_player_recieve_fields(
   end
 )
 
--- TODO add global registration functions for persisting / managing context?
+minetest.register_on_joinplayer(
+  -- IDEA add "context initializer" callback to guides
+  function(player)
+    local player_name = player.get_player_name()
+
+    -- grab persisted data for this player
+    -- data for removed guidebooks is automatically discarded
+    local persist = persist_load(player_name) or {}
+
+    -- set up contexts for all registered guides
+    for name, entry in pairs(guides) do
+      entry.guide.context[player_name] = {}
+      entry.guide.context[player_name].volatile = {
+        open = false,
+        section_group = 1,
+        section = 1,
+        page_group = 1,
+        page = 1,
+        scroll = {
+          section_group = 0, -- no offset, start at top
+          index = 1, -- index scrollbar is least amount of scrolled
+        }
+      }
+
+      entry.guide.context[player_name] = persist[name] or {
+        bookmarks = {},
+        shared = {}
+      }
+    end
+  end
+)
+
+minetest.register_on_leaveplayer(
+  function(player, timed_out)
+    local player_name = player.get_player_name()
+    persist_player(player_name)
+    persist_clean(player_name)
+  end
+)
+
+minetest.register_on_shutdown(persist_global)
+
+minetest.after(settings.persist.rate,
+  function()
+     -- HACK I dunno why.. but this feels hacky. :P
+    local rabbit_hole
+    rabbit_hole = function()
+      persist_global()
+      minetest.after(settings.persist.rate, rabbit_hole)
+    end
+
+    rabbit_hole() -- down we go!
+  end
+)
 
 -- Return API
 -------------
