@@ -27,6 +27,7 @@ local utility = dofile(modpath .. '/api/utility.lua')
     }
 ]]
 local guides = {}
+local formnames = {}
 
 -- API Functions
 ----------------
@@ -34,7 +35,6 @@ local guides = {}
 -- Backing for guidebooks:new(definition)
 local function new(definition)
   local guide = {}
-  local formnames = {}
 
   -- Verify Incoming Definition
   if not utility.verify_guide(definition) then
