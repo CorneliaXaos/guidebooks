@@ -62,11 +62,20 @@ local function new(definition)
   guide.context = {}
 
   -- Assign Operating Functions
-  function guide:show(player, formname)
-    -- TODO show code
+  function guide:show(player_name, formname)
+    local context = self.context[player_name]
+    local formspec = formspecs.render_guide(
+      context.volatile.section_group,
+      context.volatile.section,
+      context.volatile.page_group,
+      context.volatile.page,
+      context.volatile.scroll
+    )
+    context.volatile.open = true
+    minetest.show_formspec(player_name, formname, formspec)
   end
 
-  function guide:receive(player, fields)
+  function guide:receive(player_name, fields)
     -- TODO receive code
   end
 

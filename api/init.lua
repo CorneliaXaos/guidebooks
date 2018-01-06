@@ -118,6 +118,7 @@ guidebooks = {}
                   section: index of active section within the group
                   page_group: index of active page_group within section
                   page: index of active page within page group
+                  scroll: the scroll value of the section_group scrollbar
                 }
               persist: context table containing information that guidebooks
                 will preserve between user sessions and server sessions; since
@@ -157,8 +158,8 @@ guidebooks = {}
         }
 
         -- functions
-        show(player, formname): shows this guidebook to the specified player
-        receive(player, fields): should be called when receiving fields in
+        show(player_name, formname): shows this guidebook to a specified player
+        receive(player_name, fields): should be called when receiving fields in
           order to handle guidebook specific functions, returns true if it
           handled something (and there's probably nothing left to do), false
           otherwise
