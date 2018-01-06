@@ -33,6 +33,7 @@ local guides = {}
 -- Backing for guidebooks:new(definition)
 local function new(definition)
   local guide = {}
+  local formnames = {}
 
   -- Verify Incoming Definition
   if not utility.verify_guide(definition) then
@@ -128,11 +129,12 @@ local function register(guidebook, options)
     return false
   end
 
-  -- Cache the Guide
+  -- Cache the Guide Data
   guides[guidebook.name] = {
     guide = guidebook,
     options = options,
   }
+  formnames[options.formname] = guidebook
 
   -- Register CraftItem and Craft
   minetest.register_craftitem(options.craftitem, definition)
@@ -145,17 +147,6 @@ local function register(guidebook, options)
       }
     )
   end
-
-  -- Register Receive Fields -- BUG this must be moved to a global section..
-  minetest.register_on_player_recieve_fields(
-    function(player, in_formname, fields)
-      if in_formname ~= formname then
-        return false
-      end
-
-      return guidebook.receive(player, fields)
-    end
-  )
 
   -- We're done!
   return true
@@ -200,6 +191,7 @@ local function unregister(identifier)
 
   -- clear cache
   guides[guidebook.name] = nil
+  formnames[guidebook.options.formname] = nil
 
   -- success
   return true
@@ -217,6 +209,18 @@ end
 
 -- Global Registration Functions
 --------------------------------
+
+minetest.register_on_player_recieve_fields(
+  function(player, formname, fields)
+    local guide = formnames[formname]
+
+    if guide ~= nil then
+      return guidebook.receive(player.get_player_name(), fields)
+    else
+      return false
+    end
+  end
+)
 
 -- TODO add global registration functions for persisting / managing context?
 
