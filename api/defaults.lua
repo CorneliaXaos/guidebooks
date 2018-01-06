@@ -1,0 +1,3 @@
+-- TODO defaults.options.dimensions
+-- TODO defaults.options.textures
+-- TODO defaults.options.max

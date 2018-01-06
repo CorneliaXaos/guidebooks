@@ -1,3 +1,4 @@
+-- TODO dofile defaults.lua?
 -- TODO verify_guide(definition)
 --[[
 -- OLD CODE.. make it NOICE
@@ -44,7 +45,7 @@ do -- Check definition.section_groups
         return nil
       end
 
-      -- FIXME
+      -- TODO finish verification code
     end
   end
 end
