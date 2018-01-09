@@ -42,17 +42,7 @@ local function new(definition)
   end
 
   -- Rectify Options
-  -- TODO relocate option rectification to 'utility.lua'
-  definition.options = definition.options or {}
-  definition.options.dimensions = definition.options.dimensions or {}
-  definition.options.textures = definition.options.textures or {}
-  definition.options.max = definintion.options.max or {}
-
-  setmetatable(definition.options.dimensions, defaults.options.dimensions)
-  setmetatable(definition.options.textures, defaults.options.textures)
-  setmetatable(definition.options.max, defaults.options.max)
-  definition.options.max.bookmarks =
-    formspecs.calculate_bookmark_count(definition.options.dimensions)
+  definition.options = rectify_options(definition.options)
 
   -- Assign Defintion Data
   guide.name = definition.name
@@ -139,7 +129,7 @@ local function register(guidebook, options)
     guide = guidebook,
     options = options,
   }
-  formnames[options.formname] = guidebook
+  formnames[options.formname] = guidebook.name
 
   -- Register CraftItem and Craft
   minetest.register_craftitem(options.craftitem, definition)
@@ -256,10 +246,11 @@ end
 
 minetest.register_on_player_recieve_fields(
   function(player, formname, fields)
-    local guide = formnames[formname]
+    local guide_name = formnames[formname]
 
-    if guide ~= nil then
-      return guidebook.receive(player.get_player_name(), fields)
+    if guide_name ~= nil then
+      local guide = guides[guide_name].guide
+      return guide.receive(player.get_player_name(), fields)
     else
       return false
     end

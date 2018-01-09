@@ -3,7 +3,99 @@
   may or may not be made availalbe to users of the API.
 ]]
 
--- TODO dofile defaults.lua?
+local modpath = minetest.get_modpath('guidebooks')
+local defaults = dofile(modpath .. '/api/defaults.lua')
+
+-- Guidebook Options Verification Functions
+-------------------------------------------
+
+--[[
+  Utility function for comparing types and quickly determining the value to set.
+
+  value: the value to compare
+  type: the string type name
+  predicate: an additional test to perform, function takes value as argument
+
+  return the value to set.
+]]
+local function match_type(value, type_name, predicate)
+  if type(value) == type_name then
+    if predicate and not predicate(value) then
+      return nil -- fails custom test, return nil
+    else
+      return value
+    end
+  else
+    return nil -- wrong type, return nil
+  end
+end
+
+--[[
+  Rectifies the dimensions subtable of the guidebook options table.
+
+  dimensions: the subtable governing dimensions
+]]
+local function rectify_dimensions(dimensions)
+  -- Predicate: is_positive
+  local is_positive = function(value) return value > 0 end
+
+  -- Check members for types:
+  dimensions.index = match_type(dimensions.index, 'number', is_positive)
+  dimensions.page = match_type(dimensions.page, 'number', is_positive)
+  dimensions.height = match_type(dimensions.height, 'number', is_positive)
+
+  -- Apply Defaults
+  setmetatable(dimensions, defaults.options.dimensions)
+end
+
+--[[
+  Rectifies the textures subtable of the guidebook options table.
+
+  textures: the subtable governing formspec textures
+]]
+local function rectify_textures(textures)
+  -- Predicate: is_not_empty
+  local is_not_empty = function(value) return value ~= '' end
+
+  -- Check members for types:
+  -- TODO need to determine what textures we'll have
+
+  -- Apply Defaults
+  setmetatable(textures, defaults.options.textures)
+end
+
+--[[
+  Rectifies the max values subtable of the guidebook options table.
+
+  max: the subtable governing max values
+]]
+local function rectify_max(max)
+  -- Predicate: is_not_negative
+  local is_not_negative = function(value) return value >= 0 end
+
+  -- Check members for types:
+  match_type(max.bookmarks, 'number', is_not_negative)
+  match_type(max.shared, 'number', is_not_negative)
+
+  -- Apply Defaults
+  setmetatable(max, defaults.options.max)
+end
+
+local function rectify_options(options)
+  -- Make sure we have a valid table
+  options = options or {}
+  options.dimensions = options.dimensions or {}
+  options.textures = options.textures or {}
+  options.max = options.max or {}
+
+  -- Correct and Apply Defaults
+  rectify_dimensions(options.dimensions)
+  rectify_textures(options.textures)
+  rectify_max(options.max)
+
+  -- Return validated options table
+  return options
+end
 
 -- Guidebook Verification Functions
 -----------------------------------
@@ -156,5 +248,6 @@ end
 -----------------
 
 return {
+  rectify_options = rectify_options,
   verify_guide = verify_guide,
 }
