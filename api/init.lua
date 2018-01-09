@@ -69,13 +69,15 @@ guidebooks = {}
           cannot honor them they will be adjusted when appropriate; the adjusted
           options are returned attached to the guidebook table even if this
           table wasn't provided (the defaults are used, then); this field may
-          be nil
+          be nil; this function modifies the passed in table!
           {
             dimensions: table containing dimensions of the index and page areas
+              these values do NOT include padding so the end result MAY be
+              larger!
               {
-                index = 4, -- width of the index section in displayed tiles
-                page = 5, -- width of the page section in displayed tiles
-                height = 5, -- height of both the index and page section
+                index = 4, -- number of displayed, horizontal tiles in the index
+                page = 5, -- number of displayed, horizontal tiles along a page
+                height = 5, -- number of displayed, vertical tiles in both
               }
             textures: table containing texture overrides to customize the
               visual appearance of the formspec
