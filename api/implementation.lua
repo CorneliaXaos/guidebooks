@@ -67,7 +67,8 @@ local function new(definition)
   -- IDEA these functions could be moved out of here into their own file
   function guide:show(player_name, formname)
     local context = self.context[player_name]
-    local formspec = formspecs.render_guide(
+    local formspec = formspecs.render.guide(
+      self,
       context.volatile.section_group,
       context.volatile.section,
       context.volatile.page_group,

@@ -1,4 +1,4 @@
 -- TODO calculate_bookmark_count
 -- TODO calculate_section_count
--- TODO render_guide
+-- TODO render.guide
 -- TODO many other formspec functions
