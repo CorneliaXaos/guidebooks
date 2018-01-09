@@ -13,6 +13,7 @@ local options = {
   },
 
   textures = {
+    background = 'guidebooks_background.png',
     arrow_left = 'guidebooks_arrow_left.png',
     arrow_right = 'guidebooks_arrow_right.png',
     arrow_up = 'guidebooks_arrow_up.png',

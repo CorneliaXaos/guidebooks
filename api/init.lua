@@ -82,6 +82,7 @@ guidebooks = {}
             textures: table containing texture overrides to customize the
               visual appearance of the formspec
               {
+                background: a background image spanning the entire formspec
                 arrow_left: arrow icon pointing to the left
                 arrow_right: arrow icon pointing to the right
                 arrow_up: arrow icon pointing up

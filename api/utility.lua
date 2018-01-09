@@ -58,6 +58,7 @@ local function rectify_textures(textures)
   local is_not_empty = function(value) return value ~= '' end
 
   -- Check members for types:
+  textures.background = match_type(textures.background, 'string', is_not_empty)
   textures.arrow_left = match_type(textures.arrow_left, 'string', is_not_empty)
   textures.arrow_right =
     match_type(textures.arrow_right, 'string', is_not_empty)
