@@ -58,7 +58,26 @@ local function rectify_textures(textures)
   local is_not_empty = function(value) return value ~= '' end
 
   -- Check members for types:
-  -- TODO need to determine what textures we'll have
+  textures.arrow_left = match_type(textures.arrow_left, 'string', is_not_empty)
+  textures.arrow_right =
+    match_type(textures.arrow_right, 'string', is_not_empty)
+  textures.arrow_up = match_type(textures.arrow_up, 'string', is_not_empty)
+  textures.arrow_down = match_type(textures.arrow_down, 'string', is_not_empty)
+  textures.share_icon = match_type(textures.share_icon, 'string', is_not_empty)
+  textures.bookmark_icon =
+    match_type(textures.bookmark_icon, 'string', is_not_empty)
+  textures.section_tab =
+    match_type(textures.section_tab, 'string', is_not_empty)
+  textures.bookmark_tab =
+    match_type(textures.bookmark_tab, 'string', is_not_empty)
+  textures.top_bar = match_type(textures.top_bar, 'string', is_not_empty)
+  textures.bottom_bar = match_type(textures.bottom_bar, 'string', is_not_empty)
+  textures.scroll_bar_backing =
+    match_type(textures.scroll_bar_backing, 'string', is_not_empty)
+  textures.index_backing =
+    match_type(textures.index_backing, 'string', is_not_empty)
+  textures.page_backing =
+    match_type(textures.page_backing, 'string', is_not_empty)
 
   -- Apply Defaults
   setmetatable(textures, defaults.options.textures)

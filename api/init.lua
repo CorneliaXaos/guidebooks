@@ -82,7 +82,21 @@ guidebooks = {}
             textures: table containing texture overrides to customize the
               visual appearance of the formspec
               {
-                TODO document texture overrides
+                arrow_left: arrow icon pointing to the left
+                arrow_right: arrow icon pointing to the right
+                arrow_up: arrow icon pointing up
+                arrow_down: arrow icon pointing down
+                share_icon: button icon for sharing
+                bookmark_icon: button icon for bookmarking
+                section_tab: section tab backing
+                bookmark_tab: bookmark tab backing
+                top_bar: top bar backing (contains name, and page controls)
+                bottom_bar: bottom bar backing (contains search bar and other
+                  controls)
+                scroll_bar_backing: backing image for behind the scrollbar
+                  controlling the index
+                index_backing: backing image for behind the index
+                page_backing: backing image for behind the page
               }
             max: table containing limits on certain functions, actual values
               may be less than requested

@@ -103,7 +103,7 @@ local function register(guidebook, options)
   setmetatable(definition, { __index = options.definition })
   local defaults = {
     description = guidebook.name .. ': A Guide',
-    -- inventory_image = TODO add default texture
+    inventory_image = 'guidebooks_inventory_image.png'
   }
 
   -- this is required to honor nested metatables for options.definition..
