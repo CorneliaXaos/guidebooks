@@ -26,12 +26,13 @@ local stubs = {
 
 -- Helper Functions
 -------------------
-local function calculate_exact_dimensions(options)
-  -- TODO implement calculate_exact_dimensions
-end
 
 local function calculate_bookmark_count(guidebook)
   -- TODO implement calculate_bookmark_count
+end
+
+local function calculate_exact_dimensions(options)
+  -- TODO implement calculate_exact_dimensions
 end
 
 local function calculate_section_count(guidebook)
@@ -127,6 +128,7 @@ end
 return {
   helpers = {
     calculate_bookmark_count = calculate_bookmark_count,
+    calculate_exact_dimensions = calculate_exact_dimensions,
     calculate_section_count = calculate_section_count
   },
   render_guide = render_guide
