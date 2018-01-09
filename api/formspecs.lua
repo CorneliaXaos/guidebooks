@@ -41,6 +41,46 @@ end
 -- Formspec Rendering Functions
 -------------------------------
 
+local function render_top_bar()
+  -- TODO
+end
+
+local function render_section_tabs()
+  -- TODO
+end
+
+local function render_scroll_bar()
+  -- TODO
+end
+
+local function render_index_tiled()
+  -- TODO
+end
+
+local function render_index_tile_with_text()
+  -- TODO
+end
+
+local function render_index_text()
+  -- TODO
+end
+
+local function render_index()
+  -- TODO
+end
+
+local function render_page()
+  -- TODO
+end
+
+local function render_bookmark_tabs()
+  -- TODO
+end
+
+local function render_bottom_bar()
+  -- TODO
+end
+
 --[[
   This function renders a guidebook by constructing the appropriate formspec.
 
@@ -57,7 +97,8 @@ local function render_guide(guidebook)
   formspec = formspec:gsub('%HEIGHT%', dims.total_height)
 
   -- TODO Set Background Texture
-
+  formspec =
+    formspec:gsub('%BACKGROUND%', guidebook.options.textures.background)
 
   -- Fill Containers
   local top_bar = render_top_bar(--[[TODO args]])
