@@ -218,7 +218,7 @@ end
   context: the context for the player who the guidebook is being rendered for
   dims: exact dimensions of entire guidebook, provided for convenience
 
-  return the rendered formspec snippet
+  returns the rendered formspec snippet
 ]]
 local function render_top_bar(guidebook, context, dims)
   local textures = guidebook.options.textures
@@ -252,7 +252,7 @@ end
   context: the context for the player who the guidebook is being rendered for
   dims: exact dimensions of entire guidebook, provided for convenience
 
-  return the rendered formspec snippet
+  returns the rendered formspec snippet
 ]]
 local function render_section_tabs(guidebook, context, dims)
   local section_group = guidebook.section_groups[context.volatile.section_group]
@@ -308,7 +308,7 @@ local function render_section_tabs(guidebook, context, dims)
     formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';' ..
       w .. ',' .. h .. ';' .. tex_name .. ';' .. name .. ';]'
   end
-  
+
   -- Render Down Arrow Button
   y = y + dims.section_tab.height + 0.5 -- y contains last section_tab y
   formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';1,1;' ..
@@ -320,8 +320,25 @@ local function render_section_tabs(guidebook, context, dims)
   return formspec
 end
 
-local function render_scroll_bar()
-  -- TODO
+--[[
+  Renders the scrollbar for the index panel.
+
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  returns the rendered formspec snippet
+]]
+local function render_scroll_bar(context, dims)
+  local x = dims.section_tab.width
+  local y = dims.top_bar.height
+
+  -- IDEA convert to stub?
+  local formspec = 'container[' .. x .. ',' .. y .. ']' ..
+    'scrollbar[' .. padding.scroll_bar .. ',' .. padding.scroll_bar .. ';' ..
+    dims.scroll_bar.width .. ',' .. dims.scroll_bar.height .. ';vertical;' ..
+    'scroll_index;' .. context.volatile.scroll.index .. ']' ..
+    'container_end[]'
+  return formspec
 end
 
 --[[
@@ -413,14 +430,14 @@ local function render_guide(guidebook, context)
   formspec = formspec:gsub('@WIDTH@', dims.width)
   formspec = formspec:gsub('@HEIGHT@', dims.height)
 
-  -- TODO Set Background Texture
+  -- Set Background Texture
   formspec =
     formspec:gsub('@BACKGROUND@', guidebook.options.textures.background)
 
   -- Fill Containers
   local top_bar = render_top_bar(guidebook, context, dims)
   local section_tabs = render_section_tabs(guidebook, context, dims)
-  local scroll_bar = render_scroll_bar(--[[TODO args]])
+  local scroll_bar = render_scroll_bar(context, dims)
   local index = render_index(guidebook, context, dims)
   local page = render_page(--[[TODO args]])
   local bookmark_tabs = render_bookmark_tabs(--[[TODO args]])
