@@ -120,7 +120,7 @@ end
 
 -- Guidebook Verification Functions
 -----------------------------------
--- TODO add error reporting for why a guidebook 'primitive' is invalid.
+-- IDEA add error reporting for why a guidebook 'primitive' is invalid.
 
 --[[
   This function verifies a page 'primitive'.
