@@ -28,6 +28,7 @@ guidebooks = {}
         {
           {
             name: a string name for the section_group (i.e. Beginner)
+            icon: an icon representing this group
             sections: a table of sections
               {
                 { -- a section
@@ -98,6 +99,8 @@ guidebooks = {}
                   controlling the index
                 index_backing: backing image for behind the index
                 page_backing: backing image for behind the page
+                home_icon: the icon to use for the automatically generated home
+                  section
               }
             max: table containing limits on certain functions, actual values
               may be less than requested

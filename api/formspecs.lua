@@ -51,6 +51,43 @@ local function expand_with_pad(count, size, padding)
   return math.max(count, 0) * size + (math.max(count, 1) - 1) * padding
 end
 
+--[[
+  Determines which special sections are enabled for this guidebook.
+
+  guidebook: the guidebook to test for special sections
+
+  returns a tuple: (home_section is enabled, shared_section is enabled)
+]]
+local function special_sections_enabled(guidebook)
+  local home_section = #guidebook.section_groups > 1
+  local shared_section = guidebook.options.max.shared > 0
+  return home_section, shared_section
+end
+
+--[[
+  Gets the current section displayed by the context.  Accounts for the two
+  special sections which are inserted into the beginning of the currently
+  displayed section_group if necessary
+]]
+local function get_section(guidebook, context)
+  local has_home_section, has_shared_section =
+    special_sections_enabled(guidebook)
+  local offset = (has_home_section and 1 or 0) + (has_shared_section and 1 or 0)
+
+  local section_group = guidebook.section_groups[context.volatile.section_group]
+  if offset == 0 then
+    return section_group.sections[index]
+  elseif offset == 1 then
+    if has_home_section then
+      return generate_home_section(section_group)
+    else
+      return generate_shared_section(context)
+    end
+  elseif offset == 2 then
+    return section_group.sections[context.volatile.section - offset]
+  end
+end
+
 -- Exported Helpers
 -------------------
 
@@ -170,6 +207,7 @@ end
   Renders the formspec for the top bar of the guidebook.
 
   guidebook: the guidebook to render a top bar for
+  context: the context for the player who the guidebook is being rendered for
   dims: exact dimensions of entire guidebook, provided for convenience
 
   return the rendered formspec snippet
@@ -199,28 +237,125 @@ local function render_top_bar(guidebook, context, dims)
   return top_bar
 end
 
-local function render_section_tabs()
-  -- TODO
+--[[
+  Renders the section tabs.
+
+  guidebook: the guidebook to render a top bar for
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  return the rendered formspec snippet
+]]
+local function render_section_tabs(guidebook, context, dims)
+  local section_group = guidebook.section_groups[context.volatile.section_group]
+  local home, shared = special_sections_enabled(guidebook)
+  local count = calculate_section_count(guidebook.options, dims)
+
+  local formspec = 'container[0,' .. dims.top_bar.height .. ']'
+  for i=1, math.min(count, #section_group.sections) do
+    local y = i * dims.section_tab.height
+    local w = dims.section_tab.width
+    local h = dims.section_tab.height
+
+    formspec = formspec .. 'image[0,' .. y .. ';' .. w .. ',' .. h .. ';' ..
+      guidebook.options.textures.section_tab .. ']'
+
+    local tex_name, name
+    if home and shared and i <= 2 then
+      if i == 1 then
+        tex_name = guidebook.options.textures.home_icon
+        name = 'section_home'
+      else
+        tex_name = guidebook.options.textures.share_icon
+        name = 'section_shared'
+      end
+    else if home and i == 1 then
+      tex_name = guidebook.options.textures.home_icon
+      name = 'section_home'
+    else if shared and i == 1 then
+      tex_name = guidebook.options.textures.share_icon
+      name = 'section_shared'
+    else
+      tex_name = section_group.icon
+      name = 'section_user_' .. section_group.name
+    end
+
+    local x = padding.section_tab
+    local y = y + padding.section_tab
+    local w = dims.section_tab.width - 2 * padding.section_tab
+    local h = dims.section_tab.height - 2 * padding.section_tab
+    formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';' ..
+      w .. ',' .. h .. ';' .. tex_name .. ';' .. name .. ';]'
+  end
+  formspec = formspec .. 'container_end[]'
+
+  return formspec
 end
 
 local function render_scroll_bar()
   -- TODO
 end
 
-local function render_index_tiled()
+--[[
+  Renders the index as a grid of tiles.
+
+  section: the section defined in the guidebook via guidebooks.new
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  returns a formspec representing the index.
+]]
+local function render_index_tiled(section, context, dims)
   -- TODO
 end
 
-local function render_index_tile_with_text()
+--[[
+  Renders the index as a set of rows with a tile icon and text.
+
+  section: the section defined in the guidebook via guidebooks.new
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  returns a formspec representing the index.
+]]
+local function render_index_tile_with_text(section, context, dims)
   -- TODO
 end
 
-local function render_index_text()
+--[[
+  Renders the index as rows of text.
+
+  section: the section defined in the guidebook via guidebooks.new
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  returns a formspec representing the index.
+]]
+local function render_index_text(section, context, dims)
   -- TODO
 end
 
-local function render_index()
-  -- TODO
+--[[
+  A quick lookup table for index style functions.
+]]
+local index_generators = {
+  [1] = render_index_tiled,
+  [2] = render_index_tile_with_text,
+  [3] = render_index_text
+}
+
+--[[
+  Renders an index for a section through delegation.
+
+  guidebook: the guidebook to render a top bar for
+  context: the context for the player who the guidebook is being rendered for
+  dims: exact dimensions of entire guidebook, provided for convenience
+
+  returns a formspec representing the index.
+]]
+local function render_index(guidebook, context, dims)
+  local section = get_section(guidebook, context)
+  return index_generators[section.index](section, context, dims)
 end
 
 local function render_page()
@@ -256,9 +391,9 @@ local function render_guide(guidebook, context)
 
   -- Fill Containers
   local top_bar = render_top_bar(guidebook, context, dims)
-  local section_tabs = render_section_tabs(--[[TODO args]])
+  local section_tabs = render_section_tabs(guidebook, context, dims)
   local scroll_bar = render_scroll_bar(--[[TODO args]])
-  local index = render_index(--[[TODO args]])
+  local index = render_index(guidebook, context, dims)
   local page = render_page(--[[TODO args]])
   local bookmark_tabs = render_bookmark_tabs(--[[TODO args]])
   local bottom_bar = render_bottom_bar(--[[TODO args]])

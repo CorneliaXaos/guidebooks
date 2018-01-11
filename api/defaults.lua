@@ -26,7 +26,8 @@ local options = {
     bottom_bar = 'guidebooks_bottom_bar.png',
     scroll_bar_backing = 'guidebooks_scroll_bar_backing.png',
     index_backing = 'guidebooks_index_backing.png',
-    page_backing = 'guideboks_page_backing.png',
+    page_backing = 'guidebooks_page_backing.png',
+    home_icon = 'guidebooks_home_icon.png',
   },
 
   max = {

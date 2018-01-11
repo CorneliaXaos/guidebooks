@@ -79,6 +79,7 @@ local function rectify_textures(textures)
     match_type(textures.index_backing, 'string', is_not_empty)
   textures.page_backing =
     match_type(textures.page_backing, 'string', is_not_empty)
+  textures.home_icon = match_type(textures.home_icon, 'string', is_not_empty)
 
   -- Apply Defaults
   setmetatable(textures, defaults.options.textures)
@@ -206,6 +207,8 @@ local function verify_section_group(section_group)
     type(section_group) ~= 'table' or
     type(section_group.name) ~= 'string' or
     section_group.name == '' or
+    type(section_group.icon) ~= 'string' or
+    section_group.icon == '' or
     type(section_group.sections) ~= 'table'
   then
     return false
