@@ -269,7 +269,7 @@ minetest.register_on_joinplayer(
         page = 1,
         scroll = {
           section_group = 0, -- no offset, start at top
-          index = 1, -- index scrollbar is least amount of scrolled
+          index = 0, -- index scrollbar is least amount of scrolled
         }
       }
 
