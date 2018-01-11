@@ -34,7 +34,7 @@ guidebooks = {}
                 { -- a section
                   name: string name of section (i.e. Getting Started)
                   icon: image icon used to visually identify section
-                    (will span an inventory tile or so, is square9)
+                    (will span an inventory tile or so, is square)
                   index: an integer that's either...
                     1, (index entries are tiled images)
                     2, (index entry is an image with text occupying a line)
