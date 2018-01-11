@@ -64,6 +64,14 @@ local function special_sections_enabled(guidebook)
   return home_section, shared_section
 end
 
+local function generate_home_section(section_group)
+  -- TODO
+end
+
+local function generate_shared_section(guidebook, context)
+  -- TODO
+end
+
 --[[
   Gets the current section displayed by the context.  Accounts for the two
   special sections which are inserted into the beginning of the currently
@@ -81,7 +89,7 @@ local function get_section(guidebook, context)
     if has_home_section then
       return generate_home_section(section_group)
     else
-      return generate_shared_section(context)
+      return generate_shared_section(guidebook, context)
     end
   elseif offset == 2 then
     return section_group.sections[context.volatile.section - offset]
