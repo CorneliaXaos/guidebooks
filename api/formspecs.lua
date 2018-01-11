@@ -263,10 +263,17 @@ local function render_section_tabs(guidebook, context, dims)
   local target = math.min(max_tabs, total_tabs)
 
   local formspec = 'container[0,' .. dims.top_bar.height .. ']'
+  -- Render Up Arrow Button
+  local x = dims.section_tab.width / 2 - 0.5
+  local y = -1.5 -- move up from tabs a bit
+  formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';1,1;' ..
+    guidebooks.options.textures.arrow_up .. ';section_up;]'
+
+  -- Render Tabs
   for i=1,target do
     local offset = context.volatile.scroll.section_group
 
-    local y = i * dims.section_tab.height
+    y = i * dims.section_tab.height
     local w = dims.section_tab.width
     local h = dims.section_tab.height
 
@@ -295,12 +302,19 @@ local function render_section_tabs(guidebook, context, dims)
     end
 
     local x = padding.section_tab
-    local y = y + padding.section_tab
-    local w = dims.section_tab.width - 2 * padding.section_tab
-    local h = dims.section_tab.height - 2 * padding.section_tab
+    y = y + padding.section_tab
+    w = dims.section_tab.width - 2 * padding.section_tab
+    h = dims.section_tab.height - 2 * padding.section_tab
     formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';' ..
       w .. ',' .. h .. ';' .. tex_name .. ';' .. name .. ';]'
   end
+  
+  -- Render Down Arrow Button
+  y = y + dims.section_tab.height + 0.5 -- y contains last section_tab y
+  formspec = formspec .. 'image_button[' .. x .. ',' .. y .. ';1,1;' ..
+    guidebooks.options.textures.arrow_down .. ';section_down;]'
+
+  -- Close Formspec
   formspec = formspec .. 'container_end[]'
 
   return formspec
