@@ -249,10 +249,15 @@ end
 local function render_section_tabs(guidebook, context, dims)
   local section_group = guidebook.section_groups[context.volatile.section_group]
   local home, shared = special_sections_enabled(guidebook)
-  local count = calculate_section_count(guidebook.options, dims)
+  local special_tabs =  (home and 1 or 0) + (shared and 1 or 0)
+  local max_tabs = calculate_section_count(guidebook.options, dims)
+  local total_tabs = #section_group.sections + special_tabs
+  local target = math.min(max_tabs, total_tabs)
 
   local formspec = 'container[0,' .. dims.top_bar.height .. ']'
-  for i=1, math.min(count, #section_group.sections) do
+  for i=1,target do
+    local offset = context.volatile.scroll.section_group
+
     local y = i * dims.section_tab.height
     local w = dims.section_tab.width
     local h = dims.section_tab.height
@@ -261,23 +266,24 @@ local function render_section_tabs(guidebook, context, dims)
       guidebook.options.textures.section_tab .. ']'
 
     local tex_name, name
-    if home and shared and i <= 2 then
-      if i == 1 then
+    if home and shared and offset <= 2 then
+      if offset == 1 then
         tex_name = guidebook.options.textures.home_icon
         name = 'section_home'
       else
         tex_name = guidebook.options.textures.share_icon
         name = 'section_shared'
       end
-    else if home and i == 1 then
+    elseif home and offset == 1 then
       tex_name = guidebook.options.textures.home_icon
       name = 'section_home'
-    else if shared and i == 1 then
+    elseif shared and offset == 1 then
       tex_name = guidebook.options.textures.share_icon
       name = 'section_shared'
     else
-      tex_name = section_group.icon
-      name = 'section_user_' .. section_group.name
+      local section = section_group.sections[offset - special_tabs]
+      tex_name = section.icon
+      name = 'section_user_' .. section.name
     end
 
     local x = padding.section_tab
